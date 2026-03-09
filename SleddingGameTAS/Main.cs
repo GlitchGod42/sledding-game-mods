@@ -1,12 +1,19 @@
 ﻿using MelonLoader;
 using HarmonyLib;
 using Il2Cpp;
+using UnityEngine;
 
 
 namespace QOLMod
 {
     public class Main : MelonMod
     {
+        public override void OnEarlyInitializeMelon()
+        {
+            var openMenu = KeyCode.RightShift;
+            // this is setting the bind for opening the menu im hardcoding it because
+            // im lazy and fuck you if you want to change it then compile it yourself lazy ass! (does this make me lazy? uhhhh fuck)
+        }
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
         {
             HelloWorld();

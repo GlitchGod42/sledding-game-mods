@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QOLMod")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ce86167092f910fad5750cb9309d9f121e6c09ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c4c5f52c67229835691a7d43008f7ac491664aa")]
 [assembly: System.Reflection.AssemblyProductAttribute("QOLMod")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QOLMod")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
