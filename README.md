@@ -14,6 +14,6 @@ Extra Info
 
 First select the release and download the source code.
 
-Then make sure you have .NET 6 (SPECIFICALLY .NET 6) and open up terminal and type `dotnet build` in the folder of the mod
+Then make sure you have [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (SPECIFICALLY .NET 6) and open up terminal and type `dotnet build` in the folder of the mod
 
 And then go into bin/Debug/net6.0 and find the mod name and put it into your mods and you compiled it urself :)
