@@ -1,14 +1,23 @@
 # sledding-game-mods
 its all mods i made
 
-- QOLMod
+QOLMod
 adds some stuff that being:
-- no build limit (client only)
+- no build limit (kinda client only)
 - more coming soon
 
+---------------------------------------------------------------------------
 
+SleddingGameTAS (why did i name it this)
 
-Extra Info
+it adds tas with:
+- speed control
+- frame advance
+- input recording and playback (tminterface file format is what im thinking)
+
+---------------------------------------------------------------------------
+
+# Extra Info
 
 **How to compile:**
 
