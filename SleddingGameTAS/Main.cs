@@ -37,14 +37,14 @@ namespace QOLMod
         {
             Time.timeScale = 1.0f;
             IsPaused = false;
-            MelonLogger.Msg("unpaused")
+            MelonLogger.Msg("unpaused");
         }
 
         void PauseGame()
         {
             Time.timeScale = 0.0f;
             IsPaused = true;
-            MelonLogger.Msg("paused")
+            MelonLogger.Msg("paused");
         }
 
         public override void OnGUI()

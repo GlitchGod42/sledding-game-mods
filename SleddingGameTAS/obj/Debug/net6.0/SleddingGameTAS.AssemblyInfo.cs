@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SleddingGameTAS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c854091f2684ffe9f5ae0709f5cc5d700b35ccf1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d03747e5f570df9fc61f1b7690c07fae34889b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("SleddingGameTAS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SleddingGameTAS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
