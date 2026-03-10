@@ -21,7 +21,7 @@ it adds tas with:
 
 **How to compile:**
 
-First select the release and download the source code.
+First select the release and download the source code. Or if you want to get the "nightly build" from main branch then click the green code button and click download zip, extract it and then.
 
 Then make sure you have [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (SPECIFICALLY .NET 6) and open up terminal and type `dotnet build` in the folder of the mod.
 
