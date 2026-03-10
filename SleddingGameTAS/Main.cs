@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿//this was semi vibe coded because i suck ASS at C#
+using MelonLoader;
 using HarmonyLib;
 using Il2Cpp;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace QOLMod
     public class Main : MelonMod
     {
         public bool showMenu = false;
+        public bool IsPaused = true;
         public KeyCode menuKey = KeyCode.RightShift; //im hardcoding this because im lazy!!!
 
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
@@ -34,11 +36,15 @@ namespace QOLMod
         void ResumeGame()
         {
             Time.timeScale = 1.0f;
+            IsPaused = false;
+            MelonLogger.Msg("unpaused")
         }
 
         void PauseGame()
         {
             Time.timeScale = 0.0f;
+            IsPaused = true;
+            MelonLogger.Msg("paused")
         }
 
         public override void OnGUI()
@@ -49,12 +55,21 @@ namespace QOLMod
             GUI.Box(new Rect(10, 10, 200, 150), "TAS Menu");
 
             // add a button
-            if (GUI.Button(new Rect(20, 40, 160, 40), "test"))
+            if (GUI.Button(new Rect(20, 40, 160, 40), "pause/unpause"))
             {
                 MelonLogger.Msg("clicked");
+                if (IsPaused)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+                
             }
 
-            if (GUI.Button(new Rect(20, 90, 160, 40), "Close Menu"))
+            if (Input.GetKeyDown(menuKey))
             {
                 showMenu = false;
             }
