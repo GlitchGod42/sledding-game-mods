@@ -64,4 +64,7 @@ SleddingGameTAS/obj/Debug/net6.0/SleddingGameTAS.sourcelink.json
 *.dll
 /SleddingGameTAS/.vs
 /SleddingGameTAS/obj
+<<<<<<< HEAD
 /SleddingGameTAS/obj
+=======
+>>>>>>> 5ead86971749c8cc583ec957c785030028f707b9
