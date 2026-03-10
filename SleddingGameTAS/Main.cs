@@ -2,18 +2,16 @@
 using HarmonyLib;
 using Il2Cpp;
 using UnityEngine;
+using System.Reflection.Metadata;
 
 
 namespace QOLMod
 {
     public class Main : MelonMod
     {
-        public override void OnEarlyInitializeMelon()
-        {
-            var openMenu = KeyCode.RightShift;
-            // this is setting the bind for opening the menu im hardcoding it because
-            // im lazy if you want to change it then compile it yourself (does this make me lazy? uhhhh fuck)
-        }
+        public bool showMenu = false;
+        public KeyCode menuKey = KeyCode.RightShift; //im hardcoding this because im lazy!!!
+
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
         {
             HelloWorld();
@@ -21,17 +19,51 @@ namespace QOLMod
 
         public static void HelloWorld()
         {
-            MelonLogger.Msg("herro from SleddingGameTAS");
+            MelonLogger.Msg("herro from SleddingGameTAS, right shift to open menu");
+        }
+        
+        public override void OnUpdate()
+        {
+            // check for key press
+            if (Input.GetKeyDown(menuKey))
+            {
+                showMenu = !showMenu;
+            }
+        }
+
+        void ResumeGame()
+        {
+            Time.timeScale = 1.0f;
+        }
+
+        void PauseGame()
+        {
+            Time.timeScale = 0.0f;
+        }
+
+        public override void OnGUI()
+        {
+            if (!showMenu) return;
+
+            // draw the menu yk what im sayin
+            GUI.Box(new Rect(10, 10, 200, 150), "TAS Menu");
+
+            // add a button
+            if (GUI.Button(new Rect(20, 40, 160, 40), "test"))
+            {
+                MelonLogger.Msg("clicked");
+            }
+
+            if (GUI.Button(new Rect(20, 90, 160, 40), "Close Menu"))
+            {
+                showMenu = false;
+            }
         }
 
         [HarmonyPatch(typeof(PlayerReferenceManager), nameof(PlayerReferenceManager.OnPlayerReferenceAdded))]
         public static class AnyName
         {
-            [HarmonyPostfix]
-            public static void PostFix(int index)
-            {
-                
-            }
+            //insert tas code here
         }
     }
 }

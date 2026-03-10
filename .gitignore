@@ -62,3 +62,4 @@ SleddingGameTAS/obj/Debug/net6.0/SleddingGameTAS.dll
 SleddingGameTAS/obj/Debug/net6.0/SleddingGameTAS.pdb
 SleddingGameTAS/obj/Debug/net6.0/SleddingGameTAS.sourcelink.json
 *.dll
+/SleddingGameTAS/.vs
