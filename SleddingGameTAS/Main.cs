@@ -11,7 +11,8 @@ namespace QOLMod
     public class Main : MelonMod
     {
         public bool showMenu = false;
-        public bool IsPaused = true;
+        public bool IsPaused = false;
+        public KeyCode freezeKey = KeyCode.RightAlt;
         public KeyCode menuKey = KeyCode.RightShift; //im hardcoding this because im lazy!!!
 
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
@@ -30,6 +31,11 @@ namespace QOLMod
             if (Input.GetKeyDown(menuKey))
             {
                 showMenu = !showMenu;
+            }
+
+            if (Input.GetKeyDown(freezeKey))
+            {
+                
             }
         }
 
@@ -75,10 +81,25 @@ namespace QOLMod
             }
         }
 
+        void FreezeGame()
+        {
+            if (Input.GetKeyDown(freezeKey))
+            {
+                if (IsPaused)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(PlayerReferenceManager), nameof(PlayerReferenceManager.OnPlayerReferenceAdded))]
         public static class AnyName
         {
-            //insert tas code here
+            //insert other shitty code here
         }
     }
 }
