@@ -1,6 +1,5 @@
 ﻿//this was semi vibe coded because i suck ASS at C#
 using MelonLoader;
-using HarmonyLib;
 using Il2Cpp;
 using UnityEngine;
 using System.Reflection.Metadata;
@@ -12,6 +11,7 @@ namespace QOLMod
     {
         public bool showMenu = false;
         public bool IsPaused = false;
+        public bool slowMo = false;
         public KeyCode freezeKey = KeyCode.RightAlt;
         public KeyCode menuKey = KeyCode.RightShift; //im hardcoding this because im lazy!!!
 
@@ -24,10 +24,10 @@ namespace QOLMod
         {
             MelonLogger.Msg("herro from SleddingGameTAS, right shift to open menu");
         }
-        
+
         public override void OnUpdate()
         {
-            // check for key press
+            // Handle all input in OnUpdate, NOT OnGUI
             if (Input.GetKeyDown(menuKey))
             {
                 showMenu = !showMenu;
@@ -35,71 +35,47 @@ namespace QOLMod
 
             if (Input.GetKeyDown(freezeKey))
             {
-                
+                TogglePause();
             }
         }
 
-        void ResumeGame()
+        private void TogglePause()
         {
-            Time.timeScale = 1.0f;
-            IsPaused = false;
-            MelonLogger.Msg("unpaused");
+            IsPaused = !IsPaused;
+            Time.timeScale = IsPaused ? 0.0f : 1.0f;
+            MelonLogger.Msg(IsPaused ? "Game Paused" : "Game Resumed");
         }
 
-        void PauseGame()
+        private void ToggleSlowMo()
         {
-            Time.timeScale = 0.0f;
-            IsPaused = true;
-            MelonLogger.Msg("paused");
+            slowMo = !slowMo;
+            Time.timeScale = slowMo ? 0.5f : 1.0f;
+            MelonLogger.Msg(slowMo ? "Slow Motion Enabled" : "Slow Motion Disabled");
         }
 
         public override void OnGUI()
         {
             if (!showMenu) return;
 
-            // draw the menu yk what im sayin
-            GUI.Box(new Rect(10, 10, 200, 150), "TAS Menu");
+            // 1. Draw the Box first
+            // Rect(x, y, width, height)
+            GUI.Box(new Rect(100, 100, 250, 250), "TAS Menu");
 
-            // add a button
-            if (GUI.Button(new Rect(20, 40, 160, 40), "pause/unpause"))
+            // 2. Draw buttons INSIDE the box by adding the box's X and Y
+            // If box is at 100, and button should be 20 pixels inside... 100 + 20 = 120
+            if (GUI.Button(new Rect(120, 140, 210, 40), IsPaused ? "RESUME" : "PAUSE"))
             {
-                MelonLogger.Msg("clicked");
-                if (IsPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-                
+                TogglePause();
             }
 
-            if (Input.GetKeyDown(menuKey))
+            if (GUI.Button(new Rect(120, 190, 210, 40), "Half Speed"))
+            {
+                ToggleSlowMo();
+            }
+            if (GUI.Button(new Rect(120, 240, 210, 40), "Close Menu"))
             {
                 showMenu = false;
             }
-        }
-
-        void FreezeGame()
-        {
-            if (Input.GetKeyDown(freezeKey))
-            {
-                if (IsPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(PlayerReferenceManager), nameof(PlayerReferenceManager.OnPlayerReferenceAdded))]
-        public static class AnyName
-        {
-            //insert other shitty code here
         }
     }
 }
