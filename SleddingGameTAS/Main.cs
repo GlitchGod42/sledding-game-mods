@@ -59,7 +59,11 @@ namespace QOLMod
         {
             if (sceneName == "Main Mountain Scene")
             {
-                string[] deleteObjectsList = ["(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join", "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only"];
+                string[] deleteObjectsList = 
+                {
+                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join",
+                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only"
+                };
             }
         }
 
@@ -101,7 +105,7 @@ namespace QOLMod
                 {
                     Time.timeScale = 1.0f;
 
-                    Task.Delay(Time.deltaTime);
+                    Task.Delay(TimeSpan.FromSeconds(Time.deltaTime));
 
                     Time.timeScale = 0.0f;
                 }
