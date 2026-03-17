@@ -62,7 +62,8 @@ namespace QOLMod
                 string[] deleteObjectsList = 
                 {
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join",
-                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only"
+                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only",
+                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space",
                 };
             }
         }
