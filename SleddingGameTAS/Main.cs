@@ -55,18 +55,22 @@ namespace QOLMod
             MelonLogger.Msg(slowMo ? "Slow Motion Enabled" : "Slow Motion Disabled");
         }
 
-        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
-        {
-            if (sceneName == "Main Mountain Scene")
-            {
-                string[] deleteObjectsList = 
-                {
+        string[] deleteObjectsList =
+{
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join",
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only",
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space",
                 };
+
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (sceneName == "Main Mountain Scene")
+            {
+                MelonLogger.Msg(sceneName, "Has Loaded");
             }
         }
+
+
 
         public override void OnGUI()
         {
@@ -100,7 +104,7 @@ namespace QOLMod
                 Time.timeScale = currentTime;
             }
 
-            if (GUI.Button(new Rect(120, 240, 210, 40), "Frame Advance"))
+            if (GUI.Button(new Rect(120, 240, 210, 40), "Frame Advance [DOESNT WORK]"))
             {
                 if (IsPaused)
                 {
