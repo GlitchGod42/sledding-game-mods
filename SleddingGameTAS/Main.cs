@@ -4,6 +4,7 @@ using Il2Cpp;
 using UnityEngine;
 using System.Reflection.Metadata;
 using Il2CppSystem.Threading;
+using System.IO;
 
 
 namespace QOLMod
@@ -19,6 +20,7 @@ namespace QOLMod
         public float currentTime = 1.0f;
         public KeyCode freezeKey = KeyCode.RightAlt;
         public KeyCode menuKey = KeyCode.RightShift;
+        public KeyCode testSave = KeyCode.PageDown;
         //im hardcoding this till bobisbilly makes a example so i can use
         //his customkeybindapi because hes most likely lazy and he coded it
         //at like 3 am because he didnt make a example
@@ -46,6 +48,11 @@ namespace QOLMod
                 TogglePause();
             }
 
+            if (Input.GetKeyDown(testSave))
+            {
+                SaveTASToFile();
+            }
+
         }
 
         private void TogglePause()
@@ -55,7 +62,19 @@ namespace QOLMod
             MelonLogger.Msg(IsPaused ? "Game Paused" : "Game Resumed");
         }
 
+        private void SaveTASToFile()
+        {
+            string path = Path.Combine(Application.persistentDataPath, "currentTAS.sgt");
 
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "hello world \n");
+            }
+
+            string content = "this tas was made at " + System.DateTime.Now + "\n";
+
+            File.AppendAllText(path, content);
+        }
 
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
