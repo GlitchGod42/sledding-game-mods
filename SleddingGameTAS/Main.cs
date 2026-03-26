@@ -5,29 +5,41 @@ using UnityEngine;
 using System.Reflection.Metadata;
 using Il2CppSystem.Threading;
 using System.IO;
+using CustomKeybindApi;
 
 
 namespace QOLMod
 {
     public class Main : MelonMod
     {
+        //variable assigning
         public bool showMenu = false;
         public bool IsPaused = false;
-        public bool slowMo = false;
         public bool showTASMenu = false;
         public bool showSettingsMenu = false;
         public bool showReplayMenu = false;
         public float currentTime = 1.0f;
-        public KeyCode freezeKey = KeyCode.RightAlt;
         public KeyCode menuKey = KeyCode.RightShift;
-        public KeyCode testSave = KeyCode.PageDown;
-        //im hardcoding this till bobisbilly makes a example so i can use
-        //his customkeybindapi because hes most likely lazy and he coded it
-        //at like 3 am because he didnt make a example
+        public KeyCode freezeKey = KeyCode.RightAlt;
+        //public KeyCode freezeKey = KeyCode.RightAlt;
+        //public KeyCode menuKey = KeyCode.RightShift;
+        public KeyCode testSave = KeyCode.PageDown;// this stays hard coded because its supposed to be...
+
 
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
         {
             HelloWorld();
+            string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
+            if (!Directory.Exists(folderpath))
+            {
+                Directory.CreateDirectory(folderpath);
+                MelonLogger.Msg("Replays folder has been made!");
+            }
+
+            KeybindHandler.SaveKeybind("SleddingGameTAS", "FreezeKey", KeyCode.RightAlt);
+            KeybindHandler.SaveKeybind("SleddingGameTAS", "MenuKey", KeyCode.RightShift);
+            freezeKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey"));
+            menuKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey"));
         }
 
         public static void HelloWorld()
@@ -64,16 +76,21 @@ namespace QOLMod
 
         private void SaveTASToFile()
         {
-            string path = Path.Combine(Application.persistentDataPath, "currentTAS.sgt");
+            string path = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
 
             if (!File.Exists(path))
             {
-                File.WriteAllText(path, "hello world \n");
+                File.WriteAllText(path, "#hello world \n");
             }
 
-            string content = "this tas was made at " + System.DateTime.Now + "\n";
+            string content = "#this tas was made at " + System.DateTime.Now + "\n";
 
             File.AppendAllText(path, content);
+        }
+
+        private void NotWorking()
+        {
+            MelonLogger.Warning("ts aint workin homie");
         }
 
 
@@ -89,6 +106,10 @@ namespace QOLMod
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only",
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space",
                 };
+
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space").active = false;
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join").active = false;
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only").active = false;
             }
         }
 
@@ -97,7 +118,7 @@ namespace QOLMod
         public override void OnGUI()
         {
             if (!showMenu) return;
-            
+
             GUI.Box(new Rect(100, 100, 250, 250), "Master TAS Menu");
 
             if (GUI.Button(new Rect(120, 140, 210, 40), showTASMenu ? "Close TAS Menu" : "Open TAS Menu"))
@@ -157,12 +178,19 @@ namespace QOLMod
                     }
 
                 }
-                else
-                {
-                    showTASMenu = false;
-                }
             }
 
+            if (GUI.Button(new Rect(120, 190, 210, 40), showSettingsMenu ? "Close Settings Menu" : "Open Settings Menu"))
+            {
+                showSettingsMenu = !showSettingsMenu;
+                NotWorking();
+            }
+
+            if (GUI.Button(new Rect(120, 240, 210, 40), showReplayMenu ? "Close Replay Menu" : "Open Replay Menu"))
+            {
+                showReplayMenu = !showReplayMenu;
+                NotWorking();
             }
         }
     }
+}
