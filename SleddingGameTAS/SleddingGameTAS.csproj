@@ -40,7 +40,7 @@
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Sledding Game Demo\MelonLoader\Il2CppAssemblies\UnityEngine.InputLegacyModule.dll</HintPath>
 		</Reference>
 		<Reference Include="CustomKeybindApi">
-            <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Sledding Game Demo\Mods\CustomKeybindApi.dll</HintPath>
+            <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Sledding Game Demo\Mods\CustomKeybindApiFixed.dll</HintPath>
         </Reference>	
 	</ItemGroup>
 
