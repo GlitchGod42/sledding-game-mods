@@ -10,6 +10,9 @@ adds some stuff that being:
 
 SleddingGameTAS (why did i name it this)
 
+>[!CAUTION]
+>I am not responsible for you getting banned with this mod, use with caution!
+
 it adds tas with:
 - speed control
 - frame advance
