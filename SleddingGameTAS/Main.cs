@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 using Il2CppSystem.Threading;
 using System.IO;
 using CustomKeybindApi;
+using HarmonyLib;
 
 
 namespace QOLMod
@@ -36,10 +37,23 @@ namespace QOLMod
                 MelonLogger.Msg("Replays folder has been made!");
             }
 
-            KeybindHandler.SaveKeybind("SleddingGameTAS", "FreezeKey", KeyCode.RightAlt);
-            KeybindHandler.SaveKeybind("SleddingGameTAS", "MenuKey", KeyCode.RightShift);
-            freezeKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey"));
-            menuKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey"));
+            string otherpath = File.ReadAllText(Path.Combine(Application.persistentDataPath, "DEMO_CustomKeybinds.json"));
+
+            if (KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey") == "")
+            {
+                KeybindHandler.SaveKeybind("SleddingGameTAS", "FreezeKey", KeyCode.RightAlt);
+                KeybindHandler.SaveKeybind("SleddingGameTAS", "MenuKey", KeyCode.RightShift);
+                freezeKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey"));
+                menuKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey"));
+            }
+
+            else
+            {
+                KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey");
+                KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey");
+                freezeKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey"));
+                menuKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey"));
+            }
         }
 
         public static void HelloWorld()
@@ -65,7 +79,17 @@ namespace QOLMod
                 SaveTASToFile();
             }
 
-        }
+            if (PlayerReferenceManager.Instance == null || PlayerReferenceManager.Instance.GetLocalPlayerReference() == null)
+                return;
+            bool isHost = PlayerReferenceManager.Instance.GetLocalPlayerReference().PlayerControl.hostControls.IsHost;
+
+            if (!isHost)
+            {
+                showMenu = false;
+                Time.timeScale = 1.0f;
+                IsPaused = false;
+            }
+            
 
         private void TogglePause()
         {
@@ -90,7 +114,7 @@ namespace QOLMod
 
         private void NotWorking()
         {
-            MelonLogger.Warning("ts aint workin homie");
+            MelonLogger.Warning("ts aint workin homie just dont use ts");
         }
 
 
@@ -117,6 +141,11 @@ namespace QOLMod
 
         public override void OnGUI()
         {
+            if (PlayerReferenceManager.Instance?.GetLocalPlayerReference()?.PlayerControl.hostControls.IsHost == false)
+            {
+                return;
+            }
+
             if (!showMenu) return;
 
             GUI.Box(new Rect(100, 100, 250, 250), "Master TAS Menu");
@@ -132,7 +161,7 @@ namespace QOLMod
                     GUI.Box(new Rect(200, 100, 250, 250), "TAS Menu");
 
                     // 2. Draw buttons INSIDE the box by adding the box's X and Y
-                    // If box is at 100, and button should be 20 pixels inside... 100 + 20 = 120
+                    // If box is at 200, and button should be 20 pixels inside... 200 + 20 = 220
                     if (GUI.Button(new Rect(220, 140, 210, 40), IsPaused ? "Resume" : "Pause"))
                     {
                         IsPaused = !IsPaused;
