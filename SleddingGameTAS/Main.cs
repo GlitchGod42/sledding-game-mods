@@ -11,11 +11,13 @@ using HarmonyLib;
 
 namespace QOLMod
 {
+
     public class Main : MelonMod
     {
+
         //variable assigning
-        public bool showMenu = false;
-        public bool IsPaused = false;
+        private static bool showMenu = false;
+        private static bool IsPaused = false;
         public bool showTASMenu = false;
         public bool showSettingsMenu = false;
         public bool showReplayMenu = false;
@@ -39,7 +41,7 @@ namespace QOLMod
 
             string otherpath = File.ReadAllText(Path.Combine(Application.persistentDataPath, "DEMO_CustomKeybinds.json"));
 
-            if (KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey") == "")
+            if (KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey") == "") // this is useless but im futureproofing alr
             {
                 KeybindHandler.SaveKeybind("SleddingGameTAS", "FreezeKey", KeyCode.RightAlt);
                 KeybindHandler.SaveKeybind("SleddingGameTAS", "MenuKey", KeyCode.RightShift);
@@ -49,8 +51,8 @@ namespace QOLMod
 
             else
             {
-                KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey");
-                KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey");
+//                KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey");
+//                KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey");
                 freezeKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "FreezeKey"));
                 menuKey = (KeyCode)int.Parse(KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey"));
             }
@@ -78,18 +80,10 @@ namespace QOLMod
             {
                 SaveTASToFile();
             }
+        }
 
-            if (PlayerReferenceManager.Instance == null || PlayerReferenceManager.Instance.GetLocalPlayerReference() == null)
-                return;
-            bool isHost = PlayerReferenceManager.Instance.GetLocalPlayerReference().PlayerControl.hostControls.IsHost;
 
-            if (!isHost)
-            {
-                showMenu = false;
-                Time.timeScale = 1.0f;
-                IsPaused = false;
-            }
-            
+
 
         private void TogglePause()
         {
@@ -141,10 +135,7 @@ namespace QOLMod
 
         public override void OnGUI()
         {
-            if (PlayerReferenceManager.Instance?.GetLocalPlayerReference()?.PlayerControl.hostControls.IsHost == false)
-            {
-                return;
-            }
+
 
             if (!showMenu) return;
 
@@ -219,6 +210,25 @@ namespace QOLMod
             {
                 showReplayMenu = !showReplayMenu;
                 NotWorking();
+            }
+        }
+
+        [HarmonyPatch(typeof(LobbySettingsManager), nameof(LobbySettingsManager.Instance.OnStartClient))]
+        public static class OnStartClientPatch
+        {
+            [HarmonyPostfix]
+            public static void PostFix()
+            {
+                if (PlayerReferenceManager.Instance == null || PlayerReferenceManager.Instance.GetLocalPlayerReference() == null)
+                    return;
+                bool isHost = PlayerReferenceManager.Instance.GetLocalPlayerReference().PlayerControl.hostControls.IsHost;
+
+                if (!isHost)
+                {
+                    showMenu = false;
+                    Time.timeScale = 1.0f;
+                    IsPaused = false;
+                }
             }
         }
     }
