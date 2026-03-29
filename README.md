@@ -13,6 +13,10 @@ SleddingGameTAS (why did i name it this)
 >[!CAUTION]
 >I am not responsible for you getting banned with this mod, use with caution!
 
+>[!NOTE]
+>This mod is for education and entertainment purposes!
+>I wanted to make this for finding strats for racing, NOT for cheating!!!
+
 it adds tas with:
 - speed control
 - frame advance
