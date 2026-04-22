@@ -161,8 +161,8 @@ namespace QOLMod
             if (GUI.Button(new Rect(120, 240, 210, 40), showReplayMenu ? "Close Replay Menu" : "Open Replay Menu"))
             {
                 showReplayMenu = !showReplayMenu;
-                NotWorking();
-                MelonLogger.Msg("i only made the menu");
+                //NotWorking();
+                MelonLogger.Msg("PS: i only made the menu");
             }
 
             if (showTASMenu) // i moved this if statement and removed the ! and it works (how)
@@ -237,10 +237,10 @@ namespace QOLMod
                 {
                     string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
 
-                    if (OperatingSystemFamily.Windows)
-                    {
+//                    if (OperatingSystemFamily.Windows)
+//                    {
                         Process.Start("explorer.exe", @Path.Combine(Application.persistentDataPath, "Replays/"));
-                    }
+ //                   }
                 }
             }
         }
