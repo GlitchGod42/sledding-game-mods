@@ -7,7 +7,9 @@ using Il2CppSystem.Threading;
 using System.IO;
 using CustomKeybindApi;
 using HarmonyLib;
-
+using Il2Cpp_Scripts.Managers;
+using System.Diagnostics;
+using Il2CppSystem;
 
 namespace QOLMod
 {
@@ -80,6 +82,7 @@ namespace QOLMod
             {
                 SaveTASToFile();
             }
+
         }
 
 
@@ -131,7 +134,7 @@ namespace QOLMod
             }
         }
 
-
+ //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
 
         public override void OnGUI()
         {
@@ -145,73 +148,103 @@ namespace QOLMod
             {
                 showTASMenu = !showTASMenu;
 
-                if (!showTASMenu) // when the fuck will this just WORK guhhhhhhhhhhhhhhhhhhhhh
-                {
-                    // 1. Draw the Box first
-                    // Rect(x, y, width, height)
-                    GUI.Box(new Rect(200, 100, 250, 250), "TAS Menu");
-
-                    // 2. Draw buttons INSIDE the box by adding the box's X and Y
-                    // If box is at 200, and button should be 20 pixels inside... 200 + 20 = 220
-                    if (GUI.Button(new Rect(220, 140, 210, 40), IsPaused ? "Resume" : "Pause"))
-                    {
-                        IsPaused = !IsPaused;
-
-                        if (IsPaused)
-                            Time.timeScale = 0.0f;
-                        else
-                            Time.timeScale = currentTime; // Return to whatever the slider is set to
-                    }
-
-                    // 2. THE SLIDER (Only runs if we aren't paused!)
-                    GUI.Label(new Rect(220, 190, 210, 20), "Speed: " + currentTime.ToString("F2"));
-
-                    // We update the variable regardless...
-                    currentTime = GUI.HorizontalSlider(new Rect(220, 210, 210, 30), currentTime, 0.0f, 1.0f);
-
-                    // ...BUT we only apply it to the game if we aren't currently paused
-                    if (!IsPaused)
-                    {
-                        Time.timeScale = currentTime;
-                    }
-
-                    if (GUI.Button(new Rect(220, 240, 210, 40), "Frame Advance [DOESNT WORK]"))
-                    {
-                        if (IsPaused)
-                        {
-                            Time.timeScale = 1.0f;
-
-                            Task.Delay(TimeSpan.FromSeconds(Time.deltaTime));
-
-                            Time.timeScale = 0.0f;
-                        }
-
-                        else
-                        {
-                            MelonLogger.Warning("You aint paused dummy.");
-                        }
-                    }
-
-                    if (GUI.Button(new Rect(220, 290, 210, 40), "Close Menu"))
-                    {
-                        showTASMenu = false;
-                    }
-
-                }
+                
             }
 
             if (GUI.Button(new Rect(120, 190, 210, 40), showSettingsMenu ? "Close Settings Menu" : "Open Settings Menu"))
             {
                 showSettingsMenu = !showSettingsMenu;
                 NotWorking();
+                
             }
 
             if (GUI.Button(new Rect(120, 240, 210, 40), showReplayMenu ? "Close Replay Menu" : "Open Replay Menu"))
             {
                 showReplayMenu = !showReplayMenu;
                 NotWorking();
+                MelonLogger.Msg("i only made the menu");
+            }
+
+            if (showTASMenu) // i moved this if statement and removed the ! and it works (how)
+            {
+                // 1. Draw the Box first
+                // Rect(x, y, width, height)
+                GUI.Box(new Rect(100, 500, 250, 250), "TAS Menu");
+
+                // 2. Draw buttons INSIDE the box by adding the box's X and Y
+                // If box is at 200, and button should be 20 pixels inside... 200 + 20 = 220
+                if (GUI.Button(new Rect(120, 540, 210, 40), IsPaused ? "Resume" : "Pause"))
+                {
+                    IsPaused = !IsPaused;
+
+                    if (IsPaused)
+                        Time.timeScale = 0.0f;
+                    else
+                        Time.timeScale = currentTime; // Return to whatever the slider is set to
+                }
+
+                // 2. THE SLIDER (Only runs if we aren't paused!)
+                GUI.Label(new Rect(120, 590, 210, 20), "Speed: " + currentTime.ToString("F2"));
+
+                // We update the variable regardless...
+                currentTime = GUI.HorizontalSlider(new Rect(120, 610, 210, 30), currentTime, 0.0f, 1.0f);
+
+                // ...BUT we only apply it to the game if we aren't currently paused
+                if (!IsPaused)
+                {
+                    Time.timeScale = currentTime;
+                }
+
+                if (GUI.Button(new Rect(120, 640, 210, 40), "Frame Advance"))
+                {
+                    LobbyManager.Instance.LeaveLobby();
+
+                    MelonLogger.Msg("im lazy");
+                }
+
+                if (GUI.Button(new Rect(120, 690, 210, 40), "Close Menu"))
+                {
+                    showTASMenu = false;
+                }
+
+            }
+
+            if (showReplayMenu)
+            {
+                GUI.Box(new Rect(400, 120, 250, 300), "Replay Menu");
+
+                if (GUI.Button(new Rect(420, 140, 210, 40), "New"))
+                {
+                    NotWorking();
+                }
+
+                if (GUI.Button(new Rect(420, 190, 210, 40), "Save"))
+                {
+                    NotWorking();
+                }
+
+                if (GUI.Button(new Rect(420, 240, 210, 40), "Load"))
+                {
+                    NotWorking();
+                }
+
+                if (GUI.Button(new Rect(420, 290, 210, 40), "Delete"))
+                {
+                    NotWorking();
+                }
+
+                if (GUI.Button(new Rect(420, 340, 210, 40), "Open Replay Folder"))
+                {
+                    string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
+
+                    if (OperatingSystemFamily.Windows)
+                    {
+                        Process.Start("explorer.exe", @Path.Combine(Application.persistentDataPath, "Replays/"));
+                    }
+                }
             }
         }
+
 
         [HarmonyPatch(typeof(LobbySettingsManager), nameof(LobbySettingsManager.Instance.OnStartClient))]
         public static class OnStartClientPatch
@@ -228,6 +261,7 @@ namespace QOLMod
                     showMenu = false;
                     Time.timeScale = 1.0f;
                     IsPaused = false;
+                    Application.Quit();
                 }
             }
         }
