@@ -85,7 +85,7 @@ namespace QOLMod
 
             if (Input.GetKeyDown(testSave))
             {
-                SaveTASToFile();
+                InputHandling.SaveTASToFile();
             }
 
             if (Input.GetKeyDown(testRecord))
@@ -110,19 +110,6 @@ namespace QOLMod
             MelonLogger.Msg(IsPaused ? "Game Paused" : "Game Resumed");
         }
 
-        private void SaveTASToFile()
-        {
-            string path = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
-
-            if (!File.Exists(path))
-            {
-                File.WriteAllText(path, "#hello world \n");
-            }
-
-            string content = "#this tas was made at " + System.DateTime.Now + "\n";
-
-            File.AppendAllText(path, content);
-        }
 
         private void NotWorking()
         {
