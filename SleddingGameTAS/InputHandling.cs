@@ -14,8 +14,8 @@ namespace QOLMod
 {
         public class InputHandling
         {
-            public static void SaveTASToFile()
-        {
+            public static void SaveTestFile()
+            {
             string path = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
 
             if (!File.Exists(path))
@@ -26,6 +26,13 @@ namespace QOLMod
             string content = "#this tas was made at " + System.DateTime.Now + "\n";
 
             File.AppendAllText(path, content);   
-        }
+            }
+
+            public static void SaveTASToFile()
+            {
+                //this is empty because i still havent figured out
+                //input saving and why? bc im lazy
+                //also im stupid and idk how to do it
+            }
         }
 }

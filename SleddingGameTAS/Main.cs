@@ -85,7 +85,7 @@ namespace QOLMod
 
             if (Input.GetKeyDown(testSave))
             {
-                InputHandling.SaveTASToFile();
+                InputHandling.SaveTestFile();
             }
 
             if (Input.GetKeyDown(testRecord))
