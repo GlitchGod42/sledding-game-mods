@@ -23,12 +23,17 @@ namespace QOLMod
         public bool showTASMenu = false;
         public bool showSettingsMenu = false;
         public bool showReplayMenu = false;
+        public bool showNewReplayMenu = false;
+        public bool ReplayPlaying = false;
+        public bool RecordingReplay = false;
         public float currentTime = 1.0f;
         public KeyCode menuKey = KeyCode.RightShift;
         public KeyCode freezeKey = KeyCode.RightAlt;
         //public KeyCode freezeKey = KeyCode.RightAlt;
         //public KeyCode menuKey = KeyCode.RightShift;
         public KeyCode testSave = KeyCode.PageDown;// this stays hard coded because its supposed to be...
+        public KeyCode testReplay = KeyCode.Insert;// yk what if it starts with test its hardcoded just so you dont have to wonder
+        public KeyCode testRecord = KeyCode.Delete;
 
 
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
@@ -83,6 +88,16 @@ namespace QOLMod
                 SaveTASToFile();
             }
 
+            if (Input.GetKeyDown(testRecord))
+            {
+                RecordingReplay = !RecordingReplay;
+            }
+
+            if (Input.GetKeyDown(testReplay))
+            {
+                ReplayPlaying = !ReplayPlaying;
+            }
+
         }
 
 
@@ -128,17 +143,23 @@ namespace QOLMod
                     "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space",
                 };
 
-                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space").active = false;
-                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join").active = false;
-                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only").active = false;
+//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space").active = false;
+//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join").active = false;
+//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only").active = false;
             }
         }
 
- //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
-
+        //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
+        private string textFieldString = "New TAS";
         public override void OnGUI()
         {
+            GUI.Label(new Rect(1750, 50, 500, 400), "SleddingGameTAS");
 
+            GUI.Label(new Rect(1850, 1030, 100, 100), "Speed: " + currentTime.ToString("F2"));
+
+            GUI.Label(new Rect(1850, 1000, 100, 100), ReplayPlaying ? "Replaying" : "");
+
+            GUI.Label(new Rect(1850, 1000, 100, 100), RecordingReplay ? "Recording" : "");
 
             if (!showMenu) return;
 
@@ -187,7 +208,7 @@ namespace QOLMod
                 GUI.Label(new Rect(120, 590, 210, 20), "Speed: " + currentTime.ToString("F2"));
 
                 // We update the variable regardless...
-                currentTime = GUI.HorizontalSlider(new Rect(120, 610, 210, 30), currentTime, 0.0f, 1.0f);
+                currentTime = GUI.HorizontalSlider(new Rect(120, 610, 210, 30), currentTime, 0.0f, 2.0f);
 
                 // ...BUT we only apply it to the game if we aren't currently paused
                 if (!IsPaused)
@@ -209,13 +230,18 @@ namespace QOLMod
 
             }
 
+            if (showSettingsMenu)
+            {
+               // GUI.Box(new Rect()
+            }
+
             if (showReplayMenu)
             {
                 GUI.Box(new Rect(400, 120, 250, 300), "Replay Menu");
 
                 if (GUI.Button(new Rect(420, 140, 210, 40), "New"))
                 {
-                    NotWorking();
+                    showNewReplayMenu = !showNewReplayMenu;
                 }
 
                 if (GUI.Button(new Rect(420, 190, 210, 40), "Save"))
@@ -239,9 +265,18 @@ namespace QOLMod
 
 //                    if (OperatingSystemFamily.Windows)
 //                    {
-                        Process.Start("explorer.exe", @Path.Combine(Application.persistentDataPath, "Replays/"));
+                        Process.Start("explorer.exe", @folderpath);
  //                   }
                 }
+            }
+
+
+
+            if (showNewReplayMenu)
+            {
+                GUI.Box(new Rect(600, 120, 250, 100), "New Replay");
+
+                textFieldString = GUI.TextField(new Rect(620, 140, 210, 20), textFieldString);
             }
         }
 
