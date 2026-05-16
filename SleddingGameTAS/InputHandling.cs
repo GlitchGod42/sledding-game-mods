@@ -9,30 +9,47 @@ using HarmonyLib;
 using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
+using JetBrains.Annotations;
 
 namespace QOLMod
 {
         public class InputHandling
         {
-            public static void SaveTestFile()
+            public static string curcontent = "test";
+        public static void SaveTestFile()
             {
-            string path = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
+            string testpath = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
 
-            if (!File.Exists(path))
+            if (!File.Exists(testpath))
             {
-                File.WriteAllText(path, "#hello world \n");
+                File.WriteAllText(testpath, "#hello world \n");
             }
 
-            string content = "#this tas was made at " + System.DateTime.Now + "\n";
+            string testcontent = "#this tas was made at " + System.DateTime.Now + "\n";
 
-            File.AppendAllText(path, content);   
+            File.AppendAllText(testpath, testcontent);   
             }
 
             public static void SaveTASToFile()
             {
-                //this is empty because i still havent figured out
-                //input saving and why? bc im lazy
-                //also im stupid and idk how to do it
+            string path = Path.Combine(Application.persistentDataPath, "Replays/currentTAS.sgt");
+
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "# test");
+            }
+
+            
+            }
+
+            public static int raceCooldown = Race.RACE_COUNTDOWN;
+
+            public static void InputRecording()
+            {
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    string content = curcontent + "w";
+                }
             }
         }
 }

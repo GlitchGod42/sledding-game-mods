@@ -10,6 +10,7 @@ using HarmonyLib;
 using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
+using JetBrains.Annotations;
 
 namespace QOLMod
 {
@@ -69,7 +70,7 @@ namespace QOLMod
         {
             MelonLogger.Msg("herro from SleddingGameTAS, right shift to open menu");
         }
-
+        public static int raceCooldown = Race.RACE_COUNTDOWN;
         public override void OnUpdate()
         {
             // Handle all input in OnUpdate, NOT OnGUI
@@ -98,10 +99,18 @@ namespace QOLMod
                 ReplayPlaying = !ReplayPlaying;
             }
 
+            if (RecordingReplay)
+            {
+                if (PlayerControl.LocalPlayerInstance.racingController.GetIsRacing()) // thx yobson
+                {
+                    
+                }
+            }
+
         }
 
 
-
+        
 
         private void TogglePause()
         {
@@ -137,8 +146,8 @@ namespace QOLMod
         }
 
         //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
-        private string textFieldString = "New TAS";
-        public override void OnGUI()
+        public static string textFieldString = "New TAS";
+        public override void OnGUI() // im too lazy to put this into another file
         {
             GUI.Label(new Rect(1750, 50, 500, 400), "SleddingGameTAS");
 
