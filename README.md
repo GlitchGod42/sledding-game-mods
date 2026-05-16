@@ -35,3 +35,13 @@ Then make sure you have [.NET 6](https://dotnet.microsoft.com/en-us/download/dot
 Then go into bin/Debug/net6.0 and find the mod name and put it into your mods and you compiled it urself :)
 >[!NOTE]
 >updates are coming im just a snail
+
+# Thank you to
+[@Stuie](https://github.com/Stuie) for fixing compilation for SleddingGameTAS
+
+[@BobisBilly](https://github.com/BobisBilly) for helping with QOLMod and some other stuff
+
+Everybody helping in the [speedrunning/modding server](https://discord.gg/QDNQ9dP9uB)
+
+And thank [you](https://youtu.be/8UFIYGkROII?start=15) for downloading/seeing this github!
+
