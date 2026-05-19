@@ -28,13 +28,13 @@ namespace QOLMod
 
                 var sledCooldown = PlayerReferenceManager.Instance.GetLocalPlayerReference().PlayerControl.sledController;
 
-                float markerCooldown = Il2Cpp_Scripts.Player.PlayerTeleportationController.ResetSpawnCooldownTime;
+            //    float markerCooldown = Il2Cpp_Scripts.Player.PlayerTeleportationController.ResetSpawnCooldownTime;
 
                 lobbySettings.maxBuildableItems = 2147483647; // this is for removing build limit
 
                 //markerCooldown.ResetSpawnCooldownTime = 0f;
 
-                Il2Cpp_Scripts.Player.PlayerTeleportationController.ResetSpawnCooldownTime = 0f; // marker return timer and doesnt work
+             //   Il2Cpp_Scripts.Player.PlayerTeleportationController.ResetSpawnCooldownTime = 0f; // marker return timer and doesnt work
 
                 sledCooldown.sledUseCooldown = 0; //this is to get rid of sled use cooldown but it doesnt work FUCK
 
