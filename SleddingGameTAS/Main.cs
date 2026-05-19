@@ -10,7 +10,6 @@ using HarmonyLib;
 using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
-using JetBrains.Annotations;
 
 namespace QOLMod
 {
@@ -40,12 +39,12 @@ namespace QOLMod
         public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
         {
             HelloWorld();
-            string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
-            if (!Directory.Exists(folderpath))
-            {
+            string folderpath = @"%userprofile%\Documents\SleddingGameTAS\Replays";
+          //  if (!Directory.Exists(folderpath))
+        //    {
                 Directory.CreateDirectory(folderpath);
                 MelonLogger.Msg("Replays folder has been made!");
-            }
+      //      }
 
             string otherpath = File.ReadAllText(Path.Combine(Application.persistentDataPath, "DEMO_CustomKeybinds.json"));
 
@@ -103,7 +102,12 @@ namespace QOLMod
             {
                 if (PlayerControl.LocalPlayerInstance.racingController.GetIsRacing()) // thx yobson
                 {
-                    
+                    InputHandling.InputRecording();
+                    MelonLogger.Msg("should be workin");
+                }
+                else
+                {
+                    RecordingReplay = false;
                 }
             }
 
@@ -226,7 +230,7 @@ namespace QOLMod
 
             }
 
-            if (showSettingsMenu)
+            if (showSettingsMenu) // W.I.P
             {
                // GUI.Box(new Rect()
             }
