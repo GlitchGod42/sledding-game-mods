@@ -10,6 +10,7 @@ using HarmonyLib;
 using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
+using UnityEngine.Playables;
 
 namespace QOLMod
 {
@@ -103,11 +104,14 @@ namespace QOLMod
                 if (PlayerControl.LocalPlayerInstance.racingController.GetIsRacing()) // thx yobson
                 {
                     InputHandling.InputRecording();
-                    MelonLogger.Msg("should be workin");
+                 //   MelonLogger.Msg("should be workin");
+                    
                 }
                 else
                 {
                     RecordingReplay = false;
+
+                    InputHandling.SaveTASToFile();
                 }
             }
 
@@ -121,6 +125,22 @@ namespace QOLMod
             IsPaused = !IsPaused;
             Time.timeScale = IsPaused ? 0.0f : 1.0f;
             MelonLogger.Msg(IsPaused ? "Game Paused" : "Game Resumed");
+            if (IsPaused)
+            {
+                if (RecordingReplay)
+                {
+                    InputHandling.raceCooldown.Pause();
+                    MelonLogger.Msg("stopped stopwatch");
+                }
+            }
+            if (!IsPaused)
+            {
+                if (RecordingReplay)
+                {
+                    InputHandling.raceCooldown.Play();
+                    MelonLogger.Msg("stopwatch started again");
+                }
+            }
         }
 
 
@@ -129,7 +149,7 @@ namespace QOLMod
             MelonLogger.Warning("ts aint workin homie just dont use ts");
         }
 
-
+        public static string textFieldString = "";
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (sceneName == "Main Mountain Scene")
@@ -150,9 +170,10 @@ namespace QOLMod
         }
 
         //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
-        public static string textFieldString = "New TAS";
-        public override void OnGUI() // im too lazy to put this into another file
+
+        public override void OnGUI() // i tried to move this into a seperate file but it didnt work
         {
+            {
             GUI.Label(new Rect(1750, 50, 500, 400), "SleddingGameTAS");
 
             GUI.Label(new Rect(1850, 1030, 100, 100), "Speed: " + currentTime.ToString("F2"));
@@ -182,7 +203,7 @@ namespace QOLMod
             if (GUI.Button(new Rect(120, 240, 210, 40), showReplayMenu ? "Close Replay Menu" : "Open Replay Menu"))
             {
                 showReplayMenu = !showReplayMenu;
-                //NotWorking();
+                NotWorking();
                 MelonLogger.Msg("PS: i only made the menu");
             }
 
@@ -270,8 +291,6 @@ namespace QOLMod
                 }
             }
 
-
-
             if (showNewReplayMenu)
             {
                 GUI.Box(new Rect(600, 120, 250, 100), "New Replay");
@@ -279,6 +298,7 @@ namespace QOLMod
                 textFieldString = GUI.TextField(new Rect(620, 140, 210, 20), textFieldString);
             }
         }
+    }
 
 
         [HarmonyPatch(typeof(LobbySettingsManager), nameof(LobbySettingsManager.Instance.OnStartClient))]
