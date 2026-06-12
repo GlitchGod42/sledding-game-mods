@@ -27,17 +27,22 @@ namespace QOLMod
         public bool showNewReplayMenu = false;
         public bool ReplayPlaying = false;
         public bool RecordingReplay = false;
+
+        public bool stopwatchthing = false;
         public float currentTime = 1.0f;
         public KeyCode menuKey = KeyCode.RightShift;
         public KeyCode freezeKey = KeyCode.RightAlt;
         //public KeyCode freezeKey = KeyCode.RightAlt;
         //public KeyCode menuKey = KeyCode.RightShift;
-        public KeyCode testSave = KeyCode.PageDown;// this stays hard coded because its supposed to be...
+        public KeyCode TAStestSave = KeyCode.PageDown;// this stays hard coded because its supposed to be...
         public KeyCode testReplay = KeyCode.Insert;// yk what if it starts with test its hardcoded just so you dont have to wonder
         public KeyCode testRecord = KeyCode.Delete;
+        public KeyCode saveTAS = KeyCode.PageDown;
+
+        
 
 
-        public override void OnInitializeMelon() // this is when the mod loads it logs so if it doesnt log its broken!!!
+        public override void OnInitializeMelon()
         {
             HelloWorld();
             string folderpath = @"%userprofile%\Documents\SleddingGameTAS\Replays";
@@ -70,7 +75,7 @@ namespace QOLMod
         {
             MelonLogger.Msg("herro from SleddingGameTAS, right shift to open menu");
         }
-        public static int raceCooldown = Race.RACE_COUNTDOWN;
+        
         public override void OnUpdate()
         {
             // Handle all input in OnUpdate, NOT OnGUI
@@ -84,7 +89,7 @@ namespace QOLMod
                 TogglePause();
             }
 
-            if (Input.GetKeyDown(testSave))
+            if (Input.GetKeyDown(TAStestSave))
             {
                 InputHandling.SaveTestFile();
             }
@@ -99,6 +104,14 @@ namespace QOLMod
                 ReplayPlaying = !ReplayPlaying;
             }
 
+            if (Input.GetKeyDown(saveTAS))
+            {
+                if (RecordingReplay)
+                {
+                    InputHandling.SaveTASToFile(textFieldString);
+                }
+            }
+
             if (RecordingReplay)
             {
                 if (PlayerControl.LocalPlayerInstance.racingController.GetIsRacing()) // thx yobson
@@ -107,17 +120,11 @@ namespace QOLMod
                  //   MelonLogger.Msg("should be workin");
                     
                 }
-                else
-                {
-                    RecordingReplay = false;
-
-                    InputHandling.SaveTASToFile();
-                }
             }
 
         }
-
-
+        
+      //  public static float CurrentRaceTime = (float)racetimer.Elapsed.TotalSeconds;
         
 
         private void TogglePause()
@@ -150,6 +157,8 @@ namespace QOLMod
         }
 
         public static string textFieldString = "";
+
+        public static string currentreplay = "";
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (sceneName == "Main Mountain Scene")
@@ -171,7 +180,11 @@ namespace QOLMod
 
         //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
 
-        public override void OnGUI() // i tried to move this into a seperate file but it didnt work
+        /*
+            i tried to move this into a seperate file but it didnt work
+            also this takes up like 138 lines lol
+        */
+        public override void OnGUI() 
         {
             {
             GUI.Label(new Rect(1750, 50, 500, 400), "SleddingGameTAS");
@@ -258,51 +271,59 @@ namespace QOLMod
 
             if (showReplayMenu)
             {
-                GUI.Box(new Rect(400, 120, 250, 300), "Replay Menu");
+                GUI.Box(new Rect(400, 120, 250, 370), "Replay Menu");
 
-                if (GUI.Button(new Rect(420, 140, 210, 40), "New"))
+                currentreplay = GUI.TextField(new Rect(620, 140, 210, 20), currentreplay);
+
+                if (GUI.Button(new Rect(420, 190, 210, 40), "New"))
                 {
                     showNewReplayMenu = !showNewReplayMenu;
                 }
 
-                if (GUI.Button(new Rect(420, 190, 210, 40), "Save"))
+                if (GUI.Button(new Rect(420, 240, 210, 40), "Save"))
                 {
                     NotWorking();
                 }
 
-                if (GUI.Button(new Rect(420, 240, 210, 40), "Load"))
+                if (GUI.Button(new Rect(420, 290, 210, 40), "Load"))
                 {
                     NotWorking();
                 }
 
-                if (GUI.Button(new Rect(420, 290, 210, 40), "Delete"))
+                if (GUI.Button(new Rect(420, 340, 210, 40), "Delete"))
                 {
                     NotWorking();
                 }
 
-                if (GUI.Button(new Rect(420, 340, 210, 40), "Open Replay Folder"))
+                if (GUI.Button(new Rect(420, 390, 210, 40), "Open Replay Folder"))
                 {
                     string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
-
-//                    if (OperatingSystemFamily.Windows)
-//                    {
-                        Process.Start("explorer.exe", @folderpath);
- //                   }
                 }
             }
 
             if (showNewReplayMenu)
             {
-                GUI.Box(new Rect(600, 120, 250, 100), "New Replay");
+                GUI.Box(new Rect(600, 120, 250, 180), "New Replay");
 
                 textFieldString = GUI.TextField(new Rect(620, 140, 210, 20), textFieldString);
+
+                if (GUI.Button(new Rect(620, 190, 210, 40), "Create"))
+                {
+                    showNewReplayMenu = !showNewReplayMenu;
+                    
+                    InputHandling.InitTAS(textFieldString);
+                }
+                if (GUI.Button(new Rect(620, 240, 210, 40), "Cancel"))
+                {
+                    showNewReplayMenu = !showNewReplayMenu;
+                }
             }
         }
     }
 
 
         [HarmonyPatch(typeof(LobbySettingsManager), nameof(LobbySettingsManager.Instance.OnStartClient))]
-        public static class OnStartClientPatch
+        public static class OnStartClientPatch // this is useless anyway lol
         {
             [HarmonyPostfix]
             public static void PostFix()

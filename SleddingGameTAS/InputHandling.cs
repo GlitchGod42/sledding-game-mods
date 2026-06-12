@@ -6,13 +6,16 @@ using Il2CppSystem.Threading;
 using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
+using UnityEngine.Playables;
 
 
 namespace QOLMod
 {
         public class InputHandling
         {
-        public static string curcontent = "test\n";
+        public static string curcontent = "";
+
+        public static System.Diagnostics.Stopwatch racetimer = new System.Diagnostics.Stopwatch();
         public static void SaveTestFile()
             {
             string testpath = Path.Combine(Application.persistentDataPath, "Replays/testsave.sgt");
@@ -27,67 +30,65 @@ namespace QOLMod
             File.AppendAllText(testpath, testcontent);   
             }
 
-            public static void SaveTASToFile()
+            public static void SaveTASToFile(string name)
             {
-            string path = Path.Combine(Application.persistentDataPath, "Replays/currentTAS.sgt");
+            // TODO: get the name to carry over from Main.cs to here
+            string path = Path.Combine(Application.persistentDataPath, "Replays/", name, ".sgt");
 
             File.AppendAllText(path, curcontent);
+            }
 
-            
+            public static void InitTAS(string name)
+            {
+                string path = Path.Combine(Application.persistentDataPath, "Replays/", name,".sgt");
+
+                File.AppendAllText(path, "# this was generated with SleddingGameTAS\n");
             }
 
             public static int raceCooldown = Race.RACE_COUNTDOWN;
 
             
-            public static void InputRecording() // mega jank but uhh i hope it works
+            public static void InputRecording() // TODO: make it less jank but uhh im lazy yk what im sayin
             {
-                var racetimer = Stopwatch.StartNew();
+                
 
-                float racetimer_ms = (float)racetimer.Elapsed.TotalMilliseconds;
-                float racetimer_s = (float)racetimer.Elapsed.TotalSeconds;
-
-                //string curcontent = "";
-
-                string path = Path.Combine(Application.persistentDataPath, "Replays/currentTAS.sgt");
-
-                if (!File.Exists(path))
-                {
-                    File.WriteAllText(path, curcontent);
-                }
+               float CurrentRaceTime = (float)racetimer.GetTime();
 
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " hold w\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " hold w\n";
                 }
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " hold a\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " hold a\n";
                 }
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " hold s\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " hold s\n";
                 }
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " hold d\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " hold d\n";
                 }
 
                 if (Input.GetKeyUp(KeyCode.W))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " release w\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " release w\n";
                 }
                 if (Input.GetKeyUp(KeyCode.A))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " release a\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " release a\n";
                 }
                 if (Input.GetKeyUp(KeyCode.S))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " release s\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " release s\n";
                 }
                 if (Input.GetKeyUp(KeyCode.D))
                 {
-                    curcontent = curcontent + racetimer_s.ToString("F2") + "." + racetimer_ms.ToString("F2") + " release d\n";
+                    curcontent = curcontent + CurrentRaceTime.ToString("F2") + " release d\n";
                 }
             }
         }
+
+        //TODO: make a input replaying thing..... this is gonna be pain
 }
