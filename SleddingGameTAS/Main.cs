@@ -2,15 +2,8 @@
 using MelonLoader;
 using Il2Cpp;
 using UnityEngine;
-using System.Reflection.Metadata;
-using Il2CppSystem.Threading;
-using System.IO;
 using CustomKeybindApi;
-using HarmonyLib;
 using Il2Cpp_Scripts.Managers;
-using System.Diagnostics;
-using Il2CppSystem;
-using UnityEngine.Playables;
 
 namespace QOLMod
 {
@@ -45,14 +38,14 @@ namespace QOLMod
         public override void OnInitializeMelon()
         {
             HelloWorld();
-            string folderpath = @"%userprofile%\Documents\SleddingGameTAS\Replays";
-          //  if (!Directory.Exists(folderpath))
-        //    {
+            string docpath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            string folderpath = Path.Combine(docpath, "SleddingGameTAS", "Replays");
+            MelonLogger.Msg(folderpath);
+            if (!Directory.Exists(folderpath))
+            {
                 Directory.CreateDirectory(folderpath);
                 MelonLogger.Msg("Replays folder has been made!");
-      //      }
-
-            string otherpath = File.ReadAllText(Path.Combine(Application.persistentDataPath, "DEMO_CustomKeybinds.json"));
+            }
 
             if (KeybindHandler.GetKeybind("SleddingGameTAS", "MenuKey") == "") // this is useless but im futureproofing alr
             {
@@ -136,7 +129,7 @@ namespace QOLMod
             {
                 if (RecordingReplay)
                 {
-                    InputHandling.raceCooldown.Pause();
+                    InputHandling.racetimer.Stop();
                     MelonLogger.Msg("stopped stopwatch");
                 }
             }
@@ -144,7 +137,7 @@ namespace QOLMod
             {
                 if (RecordingReplay)
                 {
-                    InputHandling.raceCooldown.Play();
+                    InputHandling.racetimer.Start();
                     MelonLogger.Msg("stopwatch started again");
                 }
             }
@@ -165,17 +158,10 @@ namespace QOLMod
             {
                 MelonLogger.Msg(sceneName, "Has Loaded");
 
-                string[] deleteObjectsList =
-{
-                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join",
-                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only",
-                    "(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space",
-                };
-
-//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space").active = false;
-//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join").active = false;
-//                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only").active = false;
-            }
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/space").active = false;
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join").active = false;
+                GameObject.Find("(Canvas) Pre-Game/UI_MainMenu/Panel/Layout Group/horizontal layout/(Button) Join - text chat only").active = false;
+          }
         }
 
         //       public Rect tasWindowRect = new Rect(400, 100, 200, 150);
@@ -191,7 +177,7 @@ namespace QOLMod
 
             GUI.Label(new Rect(1850, 1030, 100, 100), "Speed: " + currentTime.ToString("F2"));
 
-            GUI.Label(new Rect(1850, 1000, 100, 100), ReplayPlaying ? "Replaying" : "");
+            GUI.Label(new Rect(1850, 970, 100, 100), ReplayPlaying ? "Replaying" : "");
 
             GUI.Label(new Rect(1850, 1000, 100, 100), RecordingReplay ? "Recording" : "");
 
@@ -273,7 +259,7 @@ namespace QOLMod
             {
                 GUI.Box(new Rect(400, 120, 250, 370), "Replay Menu");
 
-                currentreplay = GUI.TextField(new Rect(620, 140, 210, 20), currentreplay);
+                currentreplay = GUI.TextField(new Rect(420, 140, 210, 20), currentreplay);
 
                 if (GUI.Button(new Rect(420, 190, 210, 40), "New"))
                 {
@@ -282,7 +268,14 @@ namespace QOLMod
 
                 if (GUI.Button(new Rect(420, 240, 210, 40), "Save"))
                 {
-                    NotWorking();
+                    if (RecordingReplay)
+                    {
+                        InputHandling.SaveTASToFile(currentreplay);
+                    }
+                    else
+                    {
+                        MelonLogger.Msg("ya aint recording!");
+                    }
                 }
 
                 if (GUI.Button(new Rect(420, 290, 210, 40), "Load"))
@@ -297,6 +290,7 @@ namespace QOLMod
 
                 if (GUI.Button(new Rect(420, 390, 210, 40), "Open Replay Folder"))
                 {
+                    // doesnt work for shit...
                     string folderpath = Path.Combine(Application.persistentDataPath, "Replays/");
                 }
             }
@@ -310,6 +304,8 @@ namespace QOLMod
                 if (GUI.Button(new Rect(620, 190, 210, 40), "Create"))
                 {
                     showNewReplayMenu = !showNewReplayMenu;
+
+                    MelonLogger.Msg("create");
                     
                     InputHandling.InitTAS(textFieldString);
                 }
@@ -320,9 +316,12 @@ namespace QOLMod
             }
         }
     }
+}
+}
 
-
+/*
         [HarmonyPatch(typeof(LobbySettingsManager), nameof(LobbySettingsManager.Instance.OnStartClient))]
+
         public static class OnStartClientPatch // this is useless anyway lol
         {
             [HarmonyPostfix]
@@ -343,3 +342,4 @@ namespace QOLMod
         }
     }
 }
+*/

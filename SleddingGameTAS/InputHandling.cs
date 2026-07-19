@@ -7,13 +7,28 @@ using Il2Cpp_Scripts.Managers;
 using System.Diagnostics;
 using Il2CppSystem;
 using UnityEngine.Playables;
+using System.Collections.Generic;
+using System.IO;
 
 
 namespace QOLMod
 {
         public class InputHandling
         {
+
+        // this is for input replaying
+        public struct TASInstruction
+        {
+            public float Time;
+            public string Action;
+            public KeyCode Key;
+        }
+
         public static string curcontent = "";
+        // same thing
+        public static List<TASInstruction> currentReplay = new List<TASInstruction>();
+        public static Dictionary<KeyCode, bool> virtualInputs = new Dictionary<KeyCode, bool>();
+        private static int replayIndex = 0;
 
         public static System.Diagnostics.Stopwatch racetimer = new System.Diagnostics.Stopwatch();
         public static void SaveTestFile()
@@ -32,15 +47,19 @@ namespace QOLMod
 
             public static void SaveTASToFile(string name)
             {
-            // TODO: get the name to carry over from Main.cs to here
-            string path = Path.Combine(Application.persistentDataPath, "Replays/", name, ".sgt");
+            string docpath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            string folderpath = Path.Combine(docpath, "SleddingGameTAS", "Replays");
+            string path = Path.Combine(folderpath, name) + ".sgt";
 
             File.AppendAllText(path, curcontent);
             }
 
             public static void InitTAS(string name)
             {
-                string path = Path.Combine(Application.persistentDataPath, "Replays/", name,".sgt");
+                // Aligning with SaveTASToFile path logic in Documents
+                string docpath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+                string folderpath = Path.Combine(docpath, "SleddingGameTAS", "Replays");
+                string path = Path.Combine(folderpath, name + ".sgt");
 
                 File.AppendAllText(path, "# this was generated with SleddingGameTAS\n");
             }
@@ -50,9 +69,9 @@ namespace QOLMod
             
             public static void InputRecording() // TODO: make it less jank but uhh im lazy yk what im sayin
             {
-                
+                // it works is what im trying to say ^
 
-               float CurrentRaceTime = (float)racetimer.GetTime();
+                float CurrentRaceTime = (float)racetimer.Elapsed.TotalSeconds;
 
                 if (Input.GetKeyDown(KeyCode.W))
                 {
