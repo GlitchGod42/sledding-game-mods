@@ -1,2 +1,3 @@
-dotnet build
+taskkill /F /IM "Sledding Game.exe"
+dotnet build -c Debug
 start steam://rungameid/3438850
